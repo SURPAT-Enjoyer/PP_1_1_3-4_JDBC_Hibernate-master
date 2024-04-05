@@ -7,6 +7,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jm.task.core.jdbc.util.Util.*;
+
 public class UserDaoJDBCImpl implements UserDao {
 
 
@@ -16,8 +18,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void createUsersTable() {
-        try (Connection connection = Util.getConnection()) {
-            Statement statement = connection.createStatement();
+        try {
+            Statement statement = getConnection().createStatement();
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS user(id MEDIUMINT NOT NULL AUTO_INCREMENT, name TEXT, lastName TEXT, age TINYINT, PRIMARY KEY (id));");
         } catch (Exception e) {
             System.out.println("Ошибка работы с БД - " + e.getMessage());
@@ -26,8 +28,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void dropUsersTable() {
-        try (Connection connection = Util.getConnection()) {
-            Statement statement = connection.createStatement();
+        try {
+            Statement statement = getConnection().createStatement();
             statement.executeUpdate("DROP TABLE IF EXISTS user;");
         } catch (Exception e) {
             System.out.println("Ошибка работы с БД - " + e.getMessage());
@@ -36,8 +38,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        try (Connection connection = Util.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO user(name, lastName, age) VALUES(?, ?, ?);");
+        try  {
+            PreparedStatement statement = getConnection().prepareStatement("INSERT INTO user(name, lastName, age) VALUES(?, ?, ?);");
             statement.setString(1, name);
             statement.setString(2, lastName);
             statement.setByte(3, age);
@@ -49,8 +51,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void removeUserById(long id) {
-        try (Connection connection = Util.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM user WHERE id = ?;");
+        try {
+            PreparedStatement statement = getConnection().prepareStatement("DELETE FROM user WHERE id = ?;");
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (Exception e) {
@@ -60,8 +62,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public List<User> getAllUsers() {
-        try (Connection connection = Util.getConnection()) {
-            Statement statement = connection.createStatement();
+        try {
+            Statement statement = getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM user;");
             List<User> users = new ArrayList<>();
             while (resultSet.next()) {
@@ -80,8 +82,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void cleanUsersTable() {
-        try (Connection connection = Util.getConnection()) {
-            Statement statement = connection.createStatement();
+        try {
+            Statement statement = getConnection().createStatement();
             statement.executeUpdate("TRUNCATE user;");
         } catch (Exception e) {
             System.out.println("Ошибка работы с БД - " + e.getMessage());

@@ -13,9 +13,7 @@ public class Main {
         userService.saveUser("Sidor", "Sidorov", (byte)26);
         userService.saveUser("Petr", "Petrov", (byte)19);
         userService.getAllUsers().stream()
-                .map(User::toString)
-                .forEach(System.out::println);
-        userService.getAllUsers().stream()
+                .peek(System.out::println)
                 .map(User::getId)
                 .forEach(userService::removeUserById);
         userService.dropUsersTable();
